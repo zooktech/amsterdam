@@ -1,6 +1,11 @@
-*.class
-
-# Package Files #
-*.jar
-*.war
-*.ear
+build
+.gradle
+# Eclipse files: #
+.project
+.settings
+.classpath
+bin
+# IntelliJ Idea Files: #
+*.iml
+*.iws
+*.ipr

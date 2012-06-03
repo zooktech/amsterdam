@@ -1,4 +1,4 @@
-amsterdam
+Amsterdam
 =========
 
-Java throughput management library
+A java library for throughput management.
