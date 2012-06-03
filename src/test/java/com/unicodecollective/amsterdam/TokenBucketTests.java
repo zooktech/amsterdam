@@ -13,7 +13,6 @@ import org.junit.Test;
 
 import com.unicodecollective.amsterdam.TokenBucket;
 
-
 public class TokenBucketTests {
 	
 	private TokenBucket tokenBucket;
@@ -49,7 +48,8 @@ public class TokenBucketTests {
 	}
 	
 	/**
-	 * Make sure that subsequent requests for an available number of tokens are not blocked by previous request for too many tokens
+	 * Make sure that subsequent requests for an available number of 
+	 * tokens are not blocked by previous request for too many tokens.
 	 */
 	@Test
 	public void requestingOneTokenAfterARequestForThreeFromABucketOfTwoIsValid() {
@@ -74,7 +74,7 @@ public class TokenBucketTests {
 	}
 	
 	/**
-	 * TODO: More precising sleep timing...?
+	 * TODO: More precise sleep timing...?
 	 */
 	@Test
 	public void refill1000TimesGivesCapacityOfAbout1000() throws InterruptedException {
@@ -82,7 +82,7 @@ public class TokenBucketTests {
 		tokenBucket.startFilling(perMilli(1));
 		sleep(1000);
 		int capacity = tokenBucket.getCapacity();
-		System.out.println("Capacity after 100ms: " + capacity);
+		System.out.println("Capacity after 1000ms: " + capacity);
 		assertTrue("Expected capacity of >= 999, but was: " + capacity, capacity >= 999);
 		assertTrue("Expected capacity of <= 1001, but was: " + capacity, capacity <= 1001);
 	}
@@ -93,6 +93,25 @@ public class TokenBucketTests {
 		tokenBucket.startFilling(perMilli(100));
 		sleep(4);
 		assertEquals(10, tokenBucket.getCapacity());
+	}
+	
+	@Test(expected = NullPointerException.class)
+	public void startFillingCannotBeInitiatedWithNullFillRate() {
+		tokenBucket = new TokenBucket(0);
+		tokenBucket.startFilling(null);
+	}
+	
+	@Test(expected = IllegalStateException.class)
+	public void startFillingCannotBeCalledInSuccessionWithoutStopFilling() {
+		tokenBucket = new TokenBucket(0);
+		tokenBucket.startFilling(perMilli(100));
+		tokenBucket.startFilling(perMilli(100));
+	}
+	
+	@Test(expected = NullPointerException.class)
+	public void stopFillingCannotBeCalledWithoutStartFilling() {
+		tokenBucket = new TokenBucket(0);
+		tokenBucket.stopFilling();
 	}
 	
 }
