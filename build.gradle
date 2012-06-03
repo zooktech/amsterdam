@@ -3,7 +3,7 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 
-group='unicodecollective'
+group = 'com.unicodecollective'
 version = '0.1-SNAPSHOT'
 
 repositories {
@@ -16,3 +16,5 @@ dependencies {
 			'com.google.guava:guava:11.0.2'
 	testCompile 'junit:junit:4.10'
 }
+
+jar.dependsOn test
