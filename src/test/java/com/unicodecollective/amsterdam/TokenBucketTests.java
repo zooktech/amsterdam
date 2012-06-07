@@ -2,6 +2,7 @@ package com.unicodecollective.amsterdam;
 
 import static com.unicodecollective.amsterdam.TokenBucket.FillRate.perMilli;
 import static com.unicodecollective.amsterdam.TokenBucket.FillRate.perMinute;
+import static com.unicodecollective.amsterdam.TokenBucket.FillRate.transactionsPerSecond;
 import static java.lang.Thread.sleep;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -11,7 +12,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.unicodecollective.amsterdam.TokenBucket;
+import com.unicodecollective.amsterdam.TokenBucket.FillRate;
 
 public class TokenBucketTests {
 	
@@ -23,7 +24,7 @@ public class TokenBucketTests {
 	
 	@After
 	public void tearDown() {
-		if (tokenBucket.isFilling()) {
+		if (tokenBucket != null && tokenBucket.isFilling()) {
 			tokenBucket.stopFilling();
 		}
 	}
@@ -112,6 +113,22 @@ public class TokenBucketTests {
 	public void stopFillingCannotBeCalledWithoutStartFilling() {
 		tokenBucket = new TokenBucket(0);
 		tokenBucket.stopFilling();
+	}
+	
+	@Test
+	public void tpsFillRate() {
+		assertFillRate(1, 1, transactionsPerSecond(1000));
+		assertFillRate(3, 1, transactionsPerSecond(3000));
+		assertFillRate(1, 2, transactionsPerSecond(500));
+		assertFillRate(1, 1000, transactionsPerSecond(1));
+		assertFillRate(1, 100, transactionsPerSecond(10));
+		assertFillRate(3, 1000, transactionsPerSecond(3));
+		assertFillRate(1321, 1000, transactionsPerSecond(1321));
+	}
+
+	private void assertFillRate(int transactionsPerTick, int tickMills, FillRate fillRate) {
+		assertEquals(transactionsPerTick, fillRate.getAmount());
+		assertEquals(tickMills, fillRate.getDuration().getMillis());
 	}
 	
 }

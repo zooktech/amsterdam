@@ -1,11 +1,13 @@
 package com.unicodecollective.amsterdam;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static java.lang.Math.min;
 import static java.lang.System.currentTimeMillis;
 import static java.lang.Thread.sleep;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.apache.commons.lang.math.Fraction.getReducedFraction;
 import static org.apache.log4j.Logger.getLogger;
 import static org.joda.time.Duration.millis;
 import static org.joda.time.Duration.standardMinutes;
@@ -15,6 +17,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.commons.lang.math.Fraction;
 import org.apache.log4j.Logger;
 import org.joda.time.Duration;
 
@@ -68,13 +71,13 @@ public class TokenBucket {
 	}
 
 	public boolean getTokens(int numTokens) {
-		int available = capacity.get();
-		if (available >= numTokens) {
-			if (capacity.compareAndSet(available, available - numTokens)) {
-				return true;
-			}
+		int capacityAfter = capacity.addAndGet(-numTokens);
+		if (capacityAfter < 0) {
+			// Optimistically claimed more tokens than were actually available - give them back, so the next thread can try:
+			capacity.addAndGet(numTokens);
+			return false;
 		}
-		return false;
+		return true;
 	}
 
 	public boolean isFilling() {
@@ -109,6 +112,12 @@ public class TokenBucket {
 
 		public static FillRate perMilli(int amount) {
 			return new FillRate(amount, millis(1));
+		}
+
+		public static FillRate transactionsPerSecond(int tps) {
+			checkArgument(tps > 0, "TPS value must be greater than 0.");
+			Fraction reducedFraction = getReducedFraction(tps, 1000);
+			return new FillRate(reducedFraction.getNumerator(), Duration.millis(reducedFraction.getDenominator()));
 		}
 		
 	}
