@@ -6,7 +6,7 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 
 group = 'com.unicodecollective'
-version = '0.1-SNAPSHOT'
+version = '0.1'
 
 sourceCompatibility = '1.6'
 
@@ -42,7 +42,10 @@ uploadArchives {
 				MavenDeployment deployment -> signPom(deployment)
 			}
 
-			repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+			def sonatypeRepoUrl = version.endsWith('SNAPSHOT') ?
+				"https://oss.sonatype.org/content/repositories/snapshots/"
+				: "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+			repository(url: sonatypeRepoUrl) {
 				authentication(userName: sonatypeUsername, password: sonatypePassword)
 			}
 
