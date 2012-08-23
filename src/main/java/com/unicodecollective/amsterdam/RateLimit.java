@@ -7,6 +7,10 @@ public class RateLimit {
 	private final int initialCapacity;
 	private final int maxCapacity;
 	private final FillRate fillRate;
+	
+	public RateLimit(int capacity, FillRate fillRate) {
+		this(capacity, capacity, fillRate);
+	}
 
 	public RateLimit(int initialCapacity, int maxCapacity, FillRate fillRate) {
 		this.initialCapacity = initialCapacity;
