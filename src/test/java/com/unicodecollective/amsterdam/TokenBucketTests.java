@@ -79,8 +79,7 @@ public class TokenBucketTests {
 	 */
 	@Test
 	public void refill1000TimesGivesCapacityOfAbout1000() throws InterruptedException {
-		tokenBucket = new TokenBucket(0);
-		tokenBucket.startFilling(perMilli(1));
+		tokenBucket = new TokenBucket(0, perMilli(1));
 		sleep(1000);
 		int capacity = tokenBucket.getCapacity();
 		System.out.println("Capacity after 1000ms: " + capacity);
@@ -90,23 +89,14 @@ public class TokenBucketTests {
 	
 	@Test
 	public void ensureMaximumCapacityIsNotExceeded() throws InterruptedException {
-		tokenBucket = new TokenBucket(5, 10);
-		tokenBucket.startFilling(perMilli(100));
+		tokenBucket = new TokenBucket(5, 10, perMilli(100));
 		sleep(4);
 		assertEquals(10, tokenBucket.getCapacity());
 	}
 	
 	@Test(expected = NullPointerException.class)
 	public void startFillingCannotBeInitiatedWithNullFillRate() {
-		tokenBucket = new TokenBucket(0);
-		tokenBucket.startFilling(null);
-	}
-	
-	@Test(expected = IllegalStateException.class)
-	public void startFillingCannotBeCalledInSuccessionWithoutStopFilling() {
-		tokenBucket = new TokenBucket(0);
-		tokenBucket.startFilling(perMilli(100));
-		tokenBucket.startFilling(perMilli(100));
+		tokenBucket = new TokenBucket(0, null);
 	}
 	
 	@Test(expected = NullPointerException.class)

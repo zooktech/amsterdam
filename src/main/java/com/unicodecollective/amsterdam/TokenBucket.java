@@ -36,9 +36,23 @@ public class TokenBucket {
 		this.maximumCapacity = null;
 	}
 	
+	public TokenBucket(int initialCapacity, FillRate fillRate) {
+		this(initialCapacity);
+		startFilling(fillRate);
+	}
+	
 	public TokenBucket(int initialCapacity, int maximumCapacity) {
 		this.capacity = new AtomicInteger(initialCapacity);
 		this.maximumCapacity = maximumCapacity;
+	}
+	
+	public TokenBucket(int initialCapacity, int maximumCapacity, FillRate fillRate) {
+		this(initialCapacity, maximumCapacity);
+		startFilling(fillRate);
+	}
+
+	public TokenBucket(RateLimit rateLimit) {
+		this(rateLimit.getInitialCapacity(), rateLimit.getMaxCapacity(), rateLimit.getFillRate());
 	}
 
 	public void startFilling(FillRate fillRate) {
