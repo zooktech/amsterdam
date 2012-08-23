@@ -59,14 +59,14 @@ public class TokenBucketTests {
 	}
 	
 	@Test
-	public void requestingOneTokenFromEmptyBucketWhichFillsAtOnePerSecondIsInitiallyInvalid() {
+	public void requestingOneTokenFromEmptyBucketWhichFillsAtOnePerMinuteIsInitiallyInvalid() {
 		tokenBucket = new TokenBucket(0);
 		tokenBucket.startFilling(perMinute(1));
 		assertFalse(tokenBucket.getTokens(1));
 	}
 	
 	@Test
-	public void requestingOneTokenFromEmptyBucketWhichFillsAtOnePerSecondIsValidAfterWaitingMoreThanASecond() throws InterruptedException {
+	public void requestingOneTokenFromEmptyBucketWhichFillsAtOnePerMillisecondIsValidAfterWaitingMoreThanAMillisecond() throws InterruptedException {
 		tokenBucket = new TokenBucket(0);
 		tokenBucket.startFilling(perMilli(1));
 		sleep(4);
