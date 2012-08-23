@@ -4,6 +4,9 @@ build
 .project
 .settings
 .classpath
+**/.project
+**/.settings
+**/.classpath
 bin
 # IntelliJ Idea Files: #
 *.iml
