@@ -66,7 +66,7 @@ public class RateLimiterFactoryTests {
 		TokenCostFunction tokenCostFuction = new TokenCostFunction() {
 			@Override
 			public int calculateCost(Method method, Object[] args) {
-				return (int) args[0] * 2;
+				return (Integer) args[0] * 2;
 			}
 		};
 		Tester rateLimitedTester = rateLimiterFactory.limitRate(mockTester, methodMatching("rateLimit.*"), tokenCostFuction, rateLimit);
