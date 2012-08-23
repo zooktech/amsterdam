@@ -6,6 +6,8 @@ apply plugin: 'idea'
 group = 'com.unicodecollective'
 version = '0.1-SNAPSHOT'
 
+sourceCompatibility = '1.6'
+
 repositories {
         mavenCentral()
 }
