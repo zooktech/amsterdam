@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2012 Unicode Collective London > Amsterdam contributors
+ * This program is made available under the terms of the MIT License.
+ */
 package com.unicodecollective.amsterdam;
 
 import static com.unicodecollective.amsterdam.CallSpecs.methodMatching;

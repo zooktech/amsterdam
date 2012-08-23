@@ -43,3 +43,9 @@ if (tokenBucket.getTokens(2)) {
   // Do something useful...
 }
 ```
+
+License
+------
+
+Amsterdam is released under the MIT license:
+- http://www.opensource.org/licenses/MIT

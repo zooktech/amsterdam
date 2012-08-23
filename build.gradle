@@ -2,6 +2,8 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
+apply plugin: 'maven'
+apply plugin: 'signing'
 
 group = 'com.unicodecollective'
 version = '0.1-SNAPSHOT'
@@ -9,18 +11,87 @@ version = '0.1-SNAPSHOT'
 sourceCompatibility = '1.6'
 
 repositories {
-        mavenCentral()
+	mavenCentral()
 }
 
 dependencies {
-        compile 'log4j:log4j:1.2.16',
-                        'joda-time:joda-time:2.1',
-                        'com.google.guava:guava:11.0.2',
-                        'commons-lang:commons-lang:2.6',
-                        'com.hazelcast:hazelcast:2.2',
-                        'com.googlecode.disruptor:disruptor:2.10.1'
-        testCompile 'junit:junit:4.10',
-						'org.mockito:mockito-all:1.9.0'
+	compile 'log4j:log4j:1.2.16',
+			'joda-time:joda-time:2.1',
+			'com.google.guava:guava:11.0.2',
+			'commons-lang:commons-lang:2.6',
+			'com.hazelcast:hazelcast:2.2',
+			'com.googlecode.disruptor:disruptor:2.10.1'
+	testCompile 'junit:junit:4.10',
+			'org.mockito:mockito-all:1.9.0'
 }
 
 jar.dependsOn test
+
+artifacts {
+	archives jar
+}
+
+signing {
+	sign configurations.archives
+}
+
+uploadArchives {
+	repositories {
+		mavenDeployer {
+			beforeDeployment {
+				MavenDeployment deployment -> signPom(deployment)
+			}
+
+			repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+				authentication(userName: sonatypeUsername, password: sonatypePassword)
+			}
+
+			pom.project {
+				name 'amsterdam'
+				packaging 'jar'
+				description 'A Java throughput management library.'
+				url 'https://github.com/unicode-collective-london/amsterdam'
+
+				scm {
+					url 'scm:git@github.com:unicode-collective-london/amsterdam.git'
+					connection 'scm:git@github.com:unicode-collective-london/amsterdam.git'
+					developerConnection 'scm:git@github.com:unicode-collective-london/amsterdam.git'
+				}
+
+				licenses {
+					license {
+						name 'MIT License'
+						url 'http://www.opensource.org/licenses/MIT'
+						distribution 'repo'
+					}
+				}
+
+				developers {
+					developer {
+						id 'martindow'
+						name 'Martin Dow'
+					}
+					developer {
+						id 'paddycakes'
+						name 'Patrick Gallagher'
+					}
+				}
+			}
+
+			//mess with the generated pom to set the 'packaging' tag
+			pom.withXml { XmlProvider xmlProvider ->
+				def xml = xmlProvider.asString()
+				def pomXml = new XmlParser().parse(new ByteArrayInputStream(xml.toString().bytes))
+
+				pomXml.version[0] + { packaging('jar') }
+
+				def newXml = new StringWriter()
+				def printer = new XmlNodePrinter(new PrintWriter(newXml))
+				printer.preserveWhitespace = true
+				printer.print(pomXml)
+				xml.setLength(0)
+				xml.append(newXml.toString())
+			}
+		}
+	}
+}
