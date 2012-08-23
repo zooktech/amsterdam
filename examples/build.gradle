@@ -1,0 +1,19 @@
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+group = 'com.unicodecollective'
+version = '0.1-SNAPSHOT'
+
+eclipse.project.name = "amsterdam-${eclipse.project.name}"
+
+sourceCompatibility = '1.6'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	
+}
