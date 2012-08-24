@@ -53,7 +53,7 @@ public class RateLimiterFactoryTests {
 	
 	@Test
 	public void methodCallIsNotRateLimited() {
-		RateLimit rateLimit = new RateLimit(10, 10, perSecond(0));
+		RateLimit rateLimit = new RateLimit(10, perSecond(0));
 		Tester rateLimitedTester = rateLimiterFactory.limitRate(mockTester, methodMatching("rateLimit.*"), fixedCost(1), rateLimit);
 		for (int i = 0; i < 20; i++) {
 			try {
@@ -66,7 +66,7 @@ public class RateLimiterFactoryTests {
 	
 	@Test
 	public void methodCallIsLimitedByTokenCostFunction() {
-		RateLimit rateLimit = new RateLimit(100, 100, perSecond(0));
+		RateLimit rateLimit = new RateLimit(100, perSecond(0));
 		TokenCostFunction tokenCostFuction = new TokenCostFunction() {
 			@Override
 			public int calculateCost(Method method, Object[] args) {
