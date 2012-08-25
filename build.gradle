@@ -4,6 +4,7 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'maven'
 apply plugin: 'signing'
+apply plugin: 'findbugs'
 
 group = 'com.unicodecollective'
 version = '0.1.0'
@@ -26,12 +27,12 @@ dependencies {
 jar.dependsOn test
 
 // custom tasks for creating source jar
-task sourcesJar(type: Jar, dependsOn:classes) {
+task sourcesJar(type: Jar, dependsOn: classes) {
 	classifier = 'sources'
 	from sourceSets.main.allSource
 }
 // custom tasks for creating javadoc jar
-task javadocJar(type: Jar, dependsOn:javadoc) {
+task javadocJar(type: Jar, dependsOn: javadoc) {
 	classifier = 'javadoc'
 	from javadoc.destinationDir
 }
