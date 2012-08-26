@@ -43,7 +43,6 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 	from 'LICENSE'
 }
 
-/*
 artifacts {
 	archives jar
 	archives sourcesJar
@@ -117,4 +116,3 @@ uploadArchives {
 		}
 	}
 }
-*/
