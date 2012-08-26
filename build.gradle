@@ -24,19 +24,26 @@ dependencies {
 			'org.mockito:mockito-all:1.9.0'
 }
 
-jar.dependsOn test
+jar {
+	dependsOn test
+    from 'LICENSE'
+}
 
 // custom tasks for creating source jar
 task sourcesJar(type: Jar, dependsOn: classes) {
 	classifier = 'sources'
 	from sourceSets.main.allSource
+	from 'LICENSE'
 }
+
 // custom tasks for creating javadoc jar
 task javadocJar(type: Jar, dependsOn: javadoc) {
 	classifier = 'javadoc'
 	from javadoc.destinationDir
+	from 'LICENSE'
 }
 
+/*
 artifacts {
 	archives jar
 	archives sourcesJar
@@ -110,3 +117,4 @@ uploadArchives {
 		}
 	}
 }
+*/
